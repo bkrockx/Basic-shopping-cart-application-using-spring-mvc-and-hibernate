@@ -1,0 +1,65 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+   http://www.springframework.org/schema/beans     
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<context:component-scan
+		base-package="Model,Controller,Dto,Service" />
+	
+	<tx:annotation-driven transaction-manager="hibernateTransactionManager" />
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		id="jspViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		id="dataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/test"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="Tpg@1234"></property>
+	</bean>
+
+	<bean
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"
+		id="sessionFactory">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="annotatedClasses">
+			<list>
+				<value>Model.User</value>	
+				<value>Model.Role</value>
+				<value>Model.Category</value>
+				<value>Model.Item</value>
+				<value>Model.billable</value>
+			</list>
+		</property>
+		
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>			
+		</property>
+	</bean>
+
+	<bean class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+		id="hibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="1000000"></property>
+	</bean>
+
+</beans>
